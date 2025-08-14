@@ -1,31 +1,60 @@
 use crate::error::FyersError;
-use crate::models::profile::Profile;
+use crate::models::profile::{Profile, ProfileResponse};
 use reqwest::Client;
+use serde::de::Error;
+
+const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
 #[derive(Debug, Clone)]
 pub struct FyersClient {
     http_client: Client,
-    app_id_with_version: String,
+    app_id: String,
     access_token: String,
 }
 
 impl FyersClient {
     pub fn new(app_id: String, access_token: String) -> Self {
-        let app_id_with_version = format!("{}:{}", app_id, "v3");
         Self {
             http_client: Client::new(),
-            app_id_with_version,
+            app_id,
             access_token
         }
     }
 
+    /// Fetch user's profile information.
+    /// [API Docs](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post)
     pub async fn get_profile(&self) -> Result<Profile, FyersError> {
-        // TODO: Implement the actual HTTP GET request
-        // 1. Build the URL
-        // 2. Use `self.http_client.get(...)`
-        // 3. Add the required `Authorization` header using `self.access_token` and `self.app_id_with_version`
-        // 4. Send the request with '.await?'
-        // 5. Deserialize the JSON response with `.json::<Profile>().await?`
-        unimplemented!("get profile is not implemented yet");
+        let url = format!("{}/profile", FYERS_API_BASE_URL);
+        let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
+
+        let response = self
+            .http_client
+            .get(&url)
+            .header("Authorization", auth_header_value)
+            .send()
+            .await?;
+
+        // First check if API returned a non-success status code
+        if !response.status().is_success() {
+            return Err(FyersError::Network(response.error_for_status().unwrap_err()));
+        }
+
+        let response_text = response.text().await?;
+
+        println!("DEBUG: Raw response from /profile:\n---\n{}\n---", response_text);
+
+        // Parse the successful response. The actual profile data is nested.
+        let profile_response: ProfileResponse = serde_json::from_str(&response_text)?;
+
+        if profile_response.s == "ok" {
+            Ok(profile_response.data)
+        } else {
+            Err(FyersError::ApiError {
+                code: profile_response.code,
+                message: profile_response.message
+            })
+        }
     }
+
+    // TODO: Implement other endpoints
 }

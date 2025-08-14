@@ -10,19 +10,19 @@ pub struct ProfileResponse {
 }
 
 // This represents the user profile data returned by the FYERS API
-// Documentation: https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post
+// [API Docs](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post)
 #[derive(Debug, Deserialize)]
 pub struct Profile {
-    #[serde(rename = "fy_id")]
-    pub fy_id: String,
     pub name: String,
-    pub display_name: String,
-    pub image: String,
+    pub display_name: Option<String>,
+    pub fy_id: String,
+    pub image: Option<String>,
     pub email_id: String,
-    pub pan: String,
-    pub pin_change_date: String,
-    pub pwd_change_date: String,
-    pub mobile_number: String,
+    #[serde(rename = "PAN")]
+    pub pan: Option<String>,
+    pub pin_change_date: Option<String>,
+    pub pwd_change_date: Option<String>,
+    pub mobile_number: Option<String>,
     pub totp: bool,
     pub pwd_to_expire: i64,
     pub ddpi_enabled: bool,

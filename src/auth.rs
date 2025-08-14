@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::{collections::HashMap, fmt::format};
 
-const FYERS_API_BASE_URL: &str = "https://api-fyers.fyers.in/api/v3";
+const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
 // Deserialize the access token response
 #[derive(Deserialize, Debug)]
@@ -17,9 +17,9 @@ struct TokenResponse {
 
 // Serialize the access token request
 #[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
 struct TokenRequest<'a> {
     grant_type: &'a str,
+    #[serde(rename = "appIdHash")]
     app_id_hash: &'a str,
     code: &'a str,
 }
@@ -34,8 +34,8 @@ struct TokenRequest<'a> {
 /// * https://myapi.fyers.in/docsv3#tag/Authentication-and-Login-Flow-User-Apps/paths/~1Authentication%20&%20Login%20Flow%20-%20User%20Apps/patch
 pub fn generate_auth_url(client_id: &str, redirect_uri: &str, state: &str) -> String {
     format!(
-        "https://api.fyers.in/api/v2/generate-authcode?client_id={}&redirect_uri={}&response_type=code&state={}",
-        client_id, redirect_uri, state
+        "{}/generate-authcode?client_id={}&redirect_uri={}&response_type=code&state={}",
+        FYERS_API_BASE_URL, client_id, redirect_uri, state
     )
 }
 
@@ -89,9 +89,11 @@ pub async fn generate_access_token(
             })
         }
     } else {
+        let status = response.status();
+        let error_text = response.text().await.unwrap_or_else(|_| "Could not read error body".to_string());
         Err(FyersError::AuthError(format!(
-            "Token validation failed with status: {}",
-            response.status()
+            "Token validation failed with status: {} \n Body: {}",
+            status, error_text
         )))
     }
 }
