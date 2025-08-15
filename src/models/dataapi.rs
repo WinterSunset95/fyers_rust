@@ -1,6 +1,6 @@
-use serde::Deserialize;
+use serde::{Serialize, Deserialize};
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Candle(
     pub i64,
     pub f64,
@@ -10,10 +10,15 @@ pub struct Candle(
     pub i64
 );
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct HistoryResponse {
     pub s: String,
-    pub candles: Vec<Candle>
+    #[serde(default)]
+    pub candles: Vec<Candle>,
+    #[serde(default)]
+    pub code: Option<i64>,
+    #[serde(default)]
+    pub message: Option<String>
 }
 
 // Convenience methods for Candle

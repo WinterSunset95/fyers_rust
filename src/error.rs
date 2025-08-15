@@ -12,7 +12,7 @@ pub enum FyersError {
 
     // A specific error returned by the Fyers api itself
     #[error("FYERS API error: [Code: {code}] {message}")]
-    ApiError { code: i64, message: String },
+    ApiError { s: String, code: i64, message: String },
 
     // An error related to the auth flow
     #[error("Auth error: {0}")]

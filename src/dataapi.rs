@@ -1,7 +1,6 @@
-use crate::{error::FyersError, models::dataapi::HistoryResponse};
+use crate::error::FyersError;
+use crate::models::HistoryResponse;
 use reqwest::Client;
-use serde::de::Error;
-use log::{debug, info, error};
 
 #[derive(Debug, Clone)]
 pub struct DataApi {
@@ -48,6 +47,9 @@ impl DataApi {
             DATA_API_BASE_URL, symbol, resolution, date_format, range_from, range_to, cont_flag, oi_flag
             );
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
+        let curl_command = format!("curl -H \"Authorization: {}\" \"{}\"", auth_header_value, url);
+
+        println!("Execute curl command:\n---\n{}\n---", curl_command);
 
         let response = self
             .http_client
@@ -63,17 +65,24 @@ impl DataApi {
 
         let response_text = response.text().await?;
 
-        debug!("Raw response from /history:\n---\n{}\n---", response_text);
+        println!("Raw response from /history:\n---\n{}\n---", response_text);
 
-        let history_response: HistoryResponse = serde_json::from_str(&response_text).unwrap();
+        let history_response: HistoryResponse = match serde_json::from_str(&response_text) {
+            Ok(resp) => resp,
+            Err(e) => {
+                eprintln!("Error parsing response from /history: {}", e);
+                return Err(FyersError::Parse(e));
+            }
+        };
 
-        if history_response.s == "ok" {
-            Ok(history_response)
-        } else {
-            Err(FyersError::ApiError {
-                code: 1,
-                message: "An unknown error occured".to_string()
+        if history_response.s != "ok" {
+            return Err(FyersError::ApiError {
+                s: history_response.s,
+                code: history_response.code.unwrap_or(0),
+                message: history_response.message.unwrap_or("Unknown error".to_string())
             })
         }
+
+        Ok(history_response)
     }
 }

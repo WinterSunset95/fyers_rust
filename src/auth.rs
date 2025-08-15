@@ -84,6 +84,7 @@ pub async fn generate_access_token(
             })
         } else {
             Err(FyersError::ApiError { 
+                s: token_response.s,
                 code: token_response.code.into(),
                 message: token_response.message
             })
