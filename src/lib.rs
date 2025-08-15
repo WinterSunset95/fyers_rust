@@ -3,6 +3,7 @@ pub mod client;
 pub mod error;
 pub mod models;
 pub mod websocket;
+pub mod dataapi;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right

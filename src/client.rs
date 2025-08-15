@@ -2,20 +2,23 @@ use crate::error::FyersError;
 use crate::models::profile::{Profile, ProfileResponse};
 use reqwest::Client;
 use serde::de::Error;
+use log::{debug, info, error};
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
 #[derive(Debug, Clone)]
 pub struct FyersClient {
     http_client: Client,
+    base_url: String,
     app_id: String,
     access_token: String,
 }
 
 impl FyersClient {
-    pub fn new(app_id: String, access_token: String) -> Self {
+    pub fn new(base_url: String, app_id: String, access_token: String) -> Self {
         Self {
             http_client: Client::new(),
+            base_url,
             app_id,
             access_token
         }
@@ -41,7 +44,7 @@ impl FyersClient {
 
         let response_text = response.text().await?;
 
-        println!("DEBUG: Raw response from /profile:\n---\n{}\n---", response_text);
+        debug!("Raw response from /profile:\n---\n{}\n---", response_text);
 
         // Parse the successful response. The actual profile data is nested.
         let profile_response: ProfileResponse = serde_json::from_str(&response_text)?;

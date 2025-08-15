@@ -2,6 +2,8 @@ use fyers_rust::client::FyersClient;
 use fyers_rust::error::FyersError;
 use std::env;
 
+const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
+
 #[tokio::main]
 async fn main() -> Result<(), FyersError> {
     dotenvy::dotenv().expect(".env file not found");
@@ -11,7 +13,7 @@ async fn main() -> Result<(), FyersError> {
 
     println!("\n Initializing client with token from .env file");
 
-    let client = FyersClient::new(app_id, access_token);
+    let client = FyersClient::new(FYERS_API_BASE_URL.to_string(), app_id, access_token);
 
     println!("\n Fetching user profile...");
 

@@ -6,6 +6,8 @@ use std::{env, fs};
 use std::io::{self, Write};
 use std::path::Path;
 
+const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
+
 #[tokio::main]
 async fn main() -> Result<(), FyersError> {
     dotenvy::dotenv().expect(".env file not found");
@@ -42,7 +44,7 @@ async fn main() -> Result<(), FyersError> {
     println!("\n Access token generated. Fetching user profile...");
 
     println!("Fetching user profile...");
-    let client = FyersClient::new(client_id, access_token.clone());
+    let client = FyersClient::new(FYERS_API_BASE_URL.to_string(), client_id, access_token.clone());
 
     match client.get_profile().await {
         Ok(profile) => {
