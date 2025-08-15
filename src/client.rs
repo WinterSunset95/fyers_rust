@@ -9,16 +9,14 @@ const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 #[derive(Debug, Clone)]
 pub struct FyersClient {
     http_client: Client,
-    base_url: String,
     app_id: String,
     access_token: String,
 }
 
 impl FyersClient {
-    pub fn new(base_url: String, app_id: String, access_token: String) -> Self {
+    pub fn new(app_id: String, access_token: String) -> Self {
         Self {
             http_client: Client::new(),
-            base_url,
             app_id,
             access_token
         }
