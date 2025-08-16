@@ -2,7 +2,6 @@ use crate::error::FyersError;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::{collections::HashMap, fmt::format};
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
