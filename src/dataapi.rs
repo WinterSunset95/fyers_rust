@@ -1,5 +1,5 @@
 use crate::error::FyersError;
-use crate::models::HistoryResponse;
+use crate::models::{ HistoryResponse, QuoteResponse };
 use reqwest::Client;
 
 #[derive(Debug, Clone)]
@@ -16,7 +16,7 @@ impl DataApi {
         Self {
             http_client: Client::new(),
             app_id,
-            access_token
+            access_token,
         }
     }
 
@@ -32,7 +32,7 @@ impl DataApi {
     /// * `range_to` - Indicating the end date of records. (e.g. "2022-01-01" or 670073472)
     /// * `cont_flag` - Indicating if records are to be fetched in continuous mode. (e.g. 0 or 1)
     /// * `oi_flag` - Indicating if open interest data is to be fetched. (e.g. 0 or 1)
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/get)
+    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/post)
     pub async fn get_historical_data(
         &self,
         symbol: &str,
@@ -41,13 +41,16 @@ impl DataApi {
         range_from: &str,
         range_to: &str,
         cont_flag: &str,
-        oi_flag: &str
+        oi_flag: &str,
     ) -> Result<HistoryResponse, FyersError> {
         let url = format!("{}/history?symbol={}&resolution={}&date_format={}&range_from={}&range_to={}&cont_flag={}&oi_Flag={}",
             DATA_API_BASE_URL, symbol, resolution, date_format, range_from, range_to, cont_flag, oi_flag
             );
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
-        let curl_command = format!("curl -H \"Authorization: {}\" \"{}\"", auth_header_value, url);
+        let curl_command = format!(
+            "curl -H \"Authorization: {}\" \"{}\"",
+            auth_header_value, url
+        );
 
         println!("Execute curl command:\n---\n{}\n---", curl_command);
 
@@ -60,7 +63,9 @@ impl DataApi {
 
         // First check if API returned a non-success status code
         if !response.status().is_success() {
-            return Err(FyersError::Network(response.error_for_status().unwrap_err()));
+            return Err(FyersError::Network(
+                response.error_for_status().unwrap_err(),
+            ));
         }
 
         let response_text = response.text().await?;
@@ -79,10 +84,62 @@ impl DataApi {
             return Err(FyersError::ApiError {
                 s: history_response.s,
                 code: history_response.code.unwrap_or(0),
-                message: history_response.message.unwrap_or("Unknown error".to_string())
-            })
+                message: history_response
+                    .message
+                    .unwrap_or("Unknown error".to_string()),
+            });
         }
 
         Ok(history_response)
+    }
+
+    /// Full market quotes for one or more symbols provided by the user.
+    ///
+    /// # Arguments
+    /// * `symbols` - Symbols for which data is to be fetched (e.g. "NSE:SBIN-EQ", "NSE:RELIANCE-EQ,NSE:SBIN-EQ")
+    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/get)
+    pub async fn get_market_quotes(&self, symbols: &str) -> Result<QuoteResponse, FyersError> {
+        let url = format!("{}/quotes?symbols={}", DATA_API_BASE_URL, symbols);
+        let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
+        let curl_command = format!(
+            "curl -H \"Authorization: {}\" \"{}\"",
+            auth_header_value, url
+        );
+
+        println!("Execute curl command:\n---\n{}\n---", curl_command);
+
+        let response = self
+            .http_client
+            .get(&url)
+            .header("Authorization", auth_header_value)
+            .send()
+            .await?;
+
+        if !response.status().is_success() {
+            return Err(FyersError::Network(
+                response.error_for_status().unwrap_err(),
+            ));
+        }
+
+        let response_text = response.text().await?;
+        println!("Raw response from /quotes:\n---\n{}\n---", response_text);
+
+        let quote_response: QuoteResponse = match serde_json::from_str(&response_text) {
+            Ok(resp) => resp,
+            Err(e) => {
+                eprintln!("Error parsing response from /quotes: {}", e);
+                return Err(FyersError::Parse(e));
+            }
+        };
+
+        if quote_response.s != "ok" {
+            return Err(FyersError::ApiError {
+                s: quote_response.s,
+                code: 0,
+                message: "Error fetching quotes".to_string(),
+            });
+        }
+
+        Ok(quote_response)
     }
 }
