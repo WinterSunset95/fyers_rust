@@ -1,5 +1,5 @@
 use fyers_rust::auth;
-use fyers_rust::client::FyersClient;
+use fyers_rust::user::FyersClient;
 use fyers_rust::error::FyersError;
 use std::{env, fs};
 use std::io::{self, Write};

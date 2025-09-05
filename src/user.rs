@@ -1,5 +1,5 @@
 use crate::error::FyersError;
-use crate::models::profile::{Profile, ProfileResponse};
+use crate::models::user::{Profile, ProfileResponse};
 use reqwest::Client;
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
