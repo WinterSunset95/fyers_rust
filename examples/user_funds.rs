@@ -4,7 +4,7 @@ use serde_json::to_string_pretty;
 use std::{env, fs};
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), FyersError> {
     dotenvy::dotenv().expect(".env file not found");
     let app_id = env::var("FYERS_APP_ID").expect("FYERS_APP_ID must be set in .env");
     let access_token = env::var("FYERS_ACCESS_TOKEN").expect("FYERS_ACCESS_TOKEN must be set in .env");
@@ -16,6 +16,20 @@ async fn main() {
 
     let response = user
         .get_funds()
-        .await;
+        .await?;
+
+    // Save to file
+    let filename = format!("user_funds.json");
+    let json_data = to_string_pretty(&response)?;
+    fs::write(&filename, json_data).expect("Unable to write file");
+    println!("\n Successfully fetched user funds");
+    println!("\n Data saved to {}", &filename);
+    println!("{:#?}", response);
+
+    if response.s == "ok" {
+        Ok(())
+    } else {
+        Err(FyersError::Unknown("Error fetching user funds".to_string()))
+    }
 
 }
