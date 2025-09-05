@@ -1,12 +1,9 @@
 use fyers_rust::auth;
 use fyers_rust::client::FyersClient;
 use fyers_rust::error::FyersError;
-use fyers_rust::models::profile;
 use std::{env, fs};
 use std::io::{self, Write};
 use std::path::Path;
-
-const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
 #[tokio::main]
 async fn main() -> Result<(), FyersError> {
