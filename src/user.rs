@@ -6,13 +6,13 @@ use reqwest::Client;
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
 #[derive(Debug, Clone)]
-pub struct FyersClient {
+pub struct User {
     http_client: Client,
     app_id: String,
     access_token: String,
 }
 
-impl FyersClient {
+impl User {
     pub fn new(app_id: String, access_token: String) -> Self {
         Self {
             http_client: Client::new(),

@@ -1,4 +1,4 @@
-use fyers_rust::user::FyersClient;
+use fyers_rust::user::User;
 use fyers_rust::error::FyersError;
 use std::env;
 
@@ -11,7 +11,7 @@ async fn main() -> Result<(), FyersError> {
 
     println!("\n Initializing client with token from .env file");
 
-    let client = FyersClient::new(app_id, access_token);
+    let client = User::new(app_id, access_token);
 
     println!("\n Fetching user profile...");
 
