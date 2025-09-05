@@ -10,5 +10,6 @@ pub use profile::ProfileResponse;
 pub use dataapi::HistoryResponse;
 pub use dataapi::QuoteResponse;
 pub use dataapi::MarketDepthResponse;
+pub use dataapi::OptionChainResponse;
 pub use dataapi::Candle;
 
