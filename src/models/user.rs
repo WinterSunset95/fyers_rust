@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{ Deserialize, Serialize };
 
 // Top level response for the /profile endpoint
 #[derive(Debug, Deserialize)]
@@ -28,3 +28,27 @@ pub struct Profile {
     pub ddpi_enabled: bool,
     pub mtf_enabled: bool,
 }
+
+/////////////
+/// Funds ///
+/////////////
+
+/// A single Fund entry
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FundLimit {
+    pub id: i64,
+    pub title: String,
+    pub equity_amount: f64,
+    pub commodity_amount: f64,
+}
+
+/// Top level response for the /funds endpoint
+#[derive(Debug, Deserialize, Serialize)]
+pub struct FundsResponse {
+    pub s: String,
+    pub code: i64,
+    pub message: String,
+    pub fund_limit: Vec<FundLimit>,
+}
+////////////////

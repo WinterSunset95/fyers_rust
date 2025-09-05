@@ -254,5 +254,4 @@ impl DataApi {
 
         Ok(option_chain_response)
     }
-
 }

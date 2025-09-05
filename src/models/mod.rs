@@ -6,6 +6,7 @@ pub mod dataapi;
 
 pub use user::Profile;
 pub use user::ProfileResponse;
+pub use user::FundsResponse;
 
 pub use dataapi::HistoryResponse;
 pub use dataapi::QuoteResponse;
