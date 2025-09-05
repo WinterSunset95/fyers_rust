@@ -1,5 +1,5 @@
 use crate::error::FyersError;
-use crate::models::{ HistoryResponse, QuoteResponse };
+use crate::models::{ HistoryResponse, MarketDepthResponse, QuoteResponse };
 use reqwest::Client;
 
 #[derive(Debug, Clone)]
@@ -141,5 +141,17 @@ impl DataApi {
         }
 
         Ok(quote_response)
+    }
+
+    /// Market Depth for one symbol provided by the user.
+    ///
+    /// # Arguments
+    /// * `symbol` - Symbol for which data is to be fetched (e.g. "NSE:SBIN-EQ")
+    /// * `ohlcv_flag` = Set the ohlcv_flag to 1 to get open, high, low, closing and volume
+    /// quantity
+    ///
+    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/put)
+    pub async fn get_market_depth(&self, symbol: &str, ohlcv_flag: &str) -> Result<MarketDepthResponse, FyersError> {
+        unimplemented!()
     }
 }

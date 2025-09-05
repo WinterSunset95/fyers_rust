@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Serialize, Deserialize};
 use serde_with::{ serde_as, DisplayFromStr };
 
@@ -86,6 +88,56 @@ pub struct QuoteResponse {
     pub s: String,
     #[serde(default)]
     pub d: Vec<SymbolQuoteResponse>,
+    #[serde(default)]
+    pub code: Option<i64>,
+    #[serde(default)]
+    pub message: Option<String>
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct DepthEntry {
+    pub price: f64,
+    pub volume: i64,
+    pub ord: i64,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MarketDepthData {
+    pub totalbuyqty: i64,
+    pub totalsellqty: i64,
+    pub bids: Vec<DepthEntry>,
+    pub ask: Vec<DepthEntry>,
+    pub o: f64,
+    pub h: f64,
+    pub l: f64,
+    pub c: f64,
+    pub chp: f64,
+
+    #[serde(rename = "tick_Size")]
+    pub tick_size: f64,
+
+    pub ch: f64,
+    pub ltq: f64,
+    pub ltt: f64,
+    pub ltp: f64,
+    pub v: i64,
+    pub atp: f64,
+    pub lower_ckt: f64,
+    pub upper_ckt: f64,
+    pub expiry: String,
+    pub oi: f64,
+    pub oiflag: bool,
+    pub pdoi: i64,
+    pub oipercent: f64,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MarketDepthResponse {
+    pub s: String,
+
+    #[serde(default)]
+    pub d: HashMap<String, MarketDepthData>,
+
     #[serde(default)]
     pub code: Option<i64>,
     #[serde(default)]
