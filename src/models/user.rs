@@ -52,3 +52,49 @@ pub struct FundsResponse {
     pub fund_limit: Vec<FundLimit>,
 }
 ////////////////
+
+////////////////
+/// Holdings ///
+////////////////
+
+/// Holding entry
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Holding {
+    pub holding_type: String,
+    pub quantity: i64,
+    pub cost_price: f64,
+    pub market_value: f64,
+    pub remaining_quantity: i64,
+    pub pl: f64,
+    pub ltp: f64,
+    pub id: i64,
+    pub fy_token: String,
+    pub exchange: String,
+    pub segment: i64,
+    pub isin: String,
+    #[serde(rename = "qty_t1")]
+    pub qty_t1: i64,
+    pub remaining_pledge_quantity: i64,
+    pub collateral_quantity: i64,
+}
+
+// Overall holding
+#[derive(Debug, Deserialize, Serialize)]
+pub struct OverallHolding {
+    pub count_total: i64,
+    pub total_investment: f64,
+    pub total_current_value: f64,
+    pub total_pl: f64,
+    pub pnl_perc: f64,
+}
+
+// Top level response for the /holdings endpoint
+#[derive(Debug, Deserialize, Serialize)]
+pub struct HoldingsResponse {
+    pub s: String,
+    pub code: i64,
+    pub message: String,
+    pub holdings: Vec<Holding>,
+    pub overall: OverallHolding,
+}
