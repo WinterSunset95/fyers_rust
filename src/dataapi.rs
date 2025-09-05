@@ -152,6 +152,48 @@ impl DataApi {
     ///
     /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/put)
     pub async fn get_market_depth(&self, symbol: &str, ohlcv_flag: &str) -> Result<MarketDepthResponse, FyersError> {
-        unimplemented!()
+        let url = format!("{}/depth?symbol={}&ohlcv_flag={}", DATA_API_BASE_URL, symbol, ohlcv_flag);
+        let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
+        let curl_command = format!(
+            "curl -H \"Authorization: {}\" \"{}\"",
+            auth_header_value, url
+        );
+
+        println!("Execute curl command:\n---\n{}\n---", curl_command);
+
+        let response = self
+            .http_client
+            .get(&url)
+            .header("Authorization", auth_header_value)
+            .send()
+            .await?;
+
+        if !response.status().is_success() {
+            return Err(FyersError::Network(
+                response.error_for_status().unwrap_err(),
+            ));
+        }
+
+        let response_text = response.text().await?;
+        println!("Raw response from /depth:\n---\n{}\n---", response_text);
+
+        let market_depth_response: MarketDepthResponse = match serde_json::from_str(&response_text) {
+            Ok(resp) => resp,
+            Err(e) => {
+                eprintln!("Error parsing response from /depth: {}", e);
+                return Err(FyersError::Parse(e));
+            }
+        };
+
+        if market_depth_response.s != "ok" {
+            return Err(FyersError::ApiError {
+                s: market_depth_response.s,
+                code: 0,
+                message: "Error fetching market depth".to_string(),
+            });
+        }
+
+        Ok(market_depth_response)
+
     }
 }
