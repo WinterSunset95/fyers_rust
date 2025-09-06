@@ -1,8 +1,8 @@
 use serde::{Serialize, Deserialize};
 
-//////////////
-/// Orders ///
-//////////////
+////////////
+// Orders //
+////////////
 
 /// A single order entry
 #[derive(Debug, Deserialize, Serialize)]
@@ -51,12 +51,10 @@ pub struct OrdersResponse {
     pub message: String,
     pub order_book: Vec<Order>,
 }
-//////////////
 
-
-/////////////////
-/// Positions ///
-/////////////////
+///////////////
+// Positions //
+///////////////
 
 /// A Net position entry for the netPositions array
 #[derive(Debug, Deserialize, Serialize)]
@@ -112,11 +110,10 @@ pub struct PositionsResponse {
     pub net_positions: Vec<NetPosition>,
     pub overall: Overall,
 }
-/////////////////
 
-//////////////
-/// Trades ///
-//////////////
+////////////
+// Trades //
+////////////
 
 /// A single trade item for the tradeBook array
 #[derive(Debug, Deserialize, Serialize)]
@@ -156,4 +153,3 @@ pub struct TradesResponse {
     pub message: String,
     pub trade_book: Vec<Trade>,
 }
-//////////////

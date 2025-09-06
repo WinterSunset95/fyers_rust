@@ -5,7 +5,7 @@ use sha2::{Digest, Sha256};
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
-// Deserialize the access token response
+/// The TokenResponse struct
 #[derive(Deserialize, Debug)]
 struct TokenResponse {
     s: String,
@@ -14,7 +14,7 @@ struct TokenResponse {
     access_token: Option<String>
 }
 
-// Serialize the access token request
+/// The TokenRequest struct
 #[derive(Serialize, Debug)]
 struct TokenRequest<'a> {
     grant_type: &'a str,
@@ -23,14 +23,13 @@ struct TokenRequest<'a> {
     code: &'a str,
 }
 
-/// Generate the initial authentication URL where user must log in.
+/// # Description
+/// Generate the initial authentication URL where user must log in. [Read more](https://myapi.fyers.in/docsv3#tag/Authentication-and-Login-Flow-User-Apps/paths/~1Authentication%20&%20Login%20Flow%20-%20User%20Apps/patch)
 ///
 /// # Arguments
 /// * `client_id` - FYERS client id
 /// * `redirect_uri` - Redirect URI
 /// * `state` - A unique, random string to prevent CSRF attacks
-/// # Documentation
-/// * https://myapi.fyers.in/docsv3#tag/Authentication-and-Login-Flow-User-Apps/paths/~1Authentication%20&%20Login%20Flow%20-%20User%20Apps/patch
 pub fn generate_auth_url(client_id: &str, redirect_uri: &str, state: &str) -> String {
     format!(
         "{}/generate-authcode?client_id={}&redirect_uri={}&response_type=code&state={}",
@@ -38,7 +37,8 @@ pub fn generate_auth_url(client_id: &str, redirect_uri: &str, state: &str) -> St
     )
 }
 
-/// Exchange the temporary `auth_code` from FYERS for a permanent `access_token`.
+/// # Description
+/// Exchange the temporary `auth_code` from FYERS for a permanent `access_token`. [Read more](https://myapi.fyers.in/docsv3#tag/Authentication-and-Login-Flow-User-Apps/paths/~1Authentication%20&%20Login%20Flow%20-%20User%20Apps/patch)
 /// 
 /// # Arguments
 /// * `client_id` - FYERS client id

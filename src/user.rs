@@ -5,6 +5,7 @@ use reqwest::Client;
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
+/// The User class. Implements the [User](https://myapi.fyers.in/docsv3#tag/User) section of the official Fyers API
 #[derive(Debug, Clone)]
 pub struct User {
     http_client: Client,
@@ -13,6 +14,12 @@ pub struct User {
 }
 
 impl User {
+    /// # Description
+    /// Create a new instance of the User class.
+    ///
+    /// # Arguments
+    /// * `app_id` - The app id of the user.
+    /// * `access_token` - The access token of the user.
     pub fn new(app_id: String, access_token: String) -> Self {
         Self {
             http_client: Client::new(),
@@ -21,8 +28,8 @@ impl User {
         }
     }
 
-    /// Fetch user's profile information.
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post)
+    /// # Description
+    /// Fetch user's profile information. [Read more](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post)
     pub async fn get_profile(&self) -> Result<Profile, FyersError> {
         let url = format!("{}/profile", FYERS_API_BASE_URL);
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
@@ -57,8 +64,8 @@ impl User {
         }
     }
 
-    /// Get the balance available for the user for capital as well as the commodity market
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/put)
+    /// # Description
+    /// Get the balance available for the user for capital as well as the commodity market. [Read more](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/put)
     pub async fn get_funds(&self) -> Result<FundsResponse, FyersError> {
         let url = format!("{}/funds", FYERS_API_BASE_URL);
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
@@ -86,9 +93,9 @@ impl User {
         }
     }
 
+    /// # Description
     /// The equity and mutual funds holdings which the user has in his demat account. This will
-    /// include T1 and demat holdings
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/User/paths/~1holdings/post)
+    /// include T1 and demat holdings. [Read more](https://myapi.fyers.in/docsv3#tag/User/paths/~1holdings/post)
     pub async fn get_holdings(&self) -> Result<HoldingsResponse, FyersError> {
         let url = format!("{}/holdings", FYERS_API_BASE_URL);
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
@@ -111,5 +118,4 @@ impl User {
             Err(FyersError::ApiError { s: holdings_response.s, code: holdings_response.code, message: holdings_response.message })
         }
     }
-
 }

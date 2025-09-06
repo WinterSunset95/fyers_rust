@@ -2,6 +2,7 @@ use crate::error::FyersError;
 use crate::models::{ HistoryResponse, MarketDepthResponse, QuoteResponse, OptionChainResponse };
 use reqwest::Client;
 
+/// The DataApi Class. Implements the [Data Api](https://myapi.fyers.in/docsv3#tag/Data-Api) section of the official Fyers API.
 #[derive(Debug, Clone)]
 pub struct DataApi {
     http_client: Client,
@@ -12,6 +13,13 @@ pub struct DataApi {
 const DATA_API_BASE_URL: &str = "https://api-t1.fyers.in/data";
 
 impl DataApi {
+
+    /// # Description
+    /// Creates a new instance of the DataApi class
+    ///
+    /// # Arguments
+    /// * `app_id` - The app id of the user.
+    /// * `access_token` - The access token of the user.
     pub fn new(app_id: String, access_token: String) -> Self {
         Self {
             http_client: Client::new(),
@@ -20,8 +28,9 @@ impl DataApi {
         }
     }
 
+    /// # Description
     /// Get Historical data (up to date) for a given symbol. Record is presented in the form of
-    /// candle data.
+    /// candle data. [Read more](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/post)
     ///
     /// # Arguments
     /// * `symbol` - Symbol for which data is to be fetched (e.g. "NSE:SBIN-EQ")
@@ -32,7 +41,6 @@ impl DataApi {
     /// * `range_to` - Indicating the end date of records. (e.g. "2022-01-01" or 670073472)
     /// * `cont_flag` - Indicating if records are to be fetched in continuous mode. (e.g. 0 or 1)
     /// * `oi_flag` - Indicating if open interest data is to be fetched. (e.g. 0 or 1)
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/post)
     pub async fn get_historical_data(
         &self,
         symbol: &str,
@@ -93,11 +101,11 @@ impl DataApi {
         Ok(history_response)
     }
 
-    /// Full market quotes for one or more symbols provided by the user.
+    /// # Description
+    /// Full market quotes for one or more symbols provided by the user. [Read more](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/get)
     ///
     /// # Arguments
     /// * `symbols` - Symbols for which data is to be fetched (e.g. "NSE:SBIN-EQ", "NSE:RELIANCE-EQ,NSE:SBIN-EQ")
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/get)
     pub async fn get_market_quotes(&self, symbols: &str) -> Result<QuoteResponse, FyersError> {
         let url = format!("{}/quotes?symbols={}", DATA_API_BASE_URL, symbols);
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
@@ -143,14 +151,13 @@ impl DataApi {
         Ok(quote_response)
     }
 
-    /// Market Depth for one symbol provided by the user.
+    /// # Description
+    /// Market Depth for one symbol provided by the user. [Read more](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/put)
     ///
     /// # Arguments
     /// * `symbol` - Symbol for which data is to be fetched (e.g. "NSE:SBIN-EQ")
     /// * `ohlcv_flag` = Set the ohlcv_flag to 1 to get open, high, low, closing and volume
     /// quantity
-    ///
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/put)
     pub async fn get_market_depth(&self, symbol: &str, ohlcv_flag: &str) -> Result<MarketDepthResponse, FyersError> {
         let url = format!("{}/depth?symbol={}&ohlcv_flag={}", DATA_API_BASE_URL, symbol, ohlcv_flag);
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
@@ -196,14 +203,13 @@ impl DataApi {
         Ok(market_depth_response)
     }
 
-    /// Option Chain for a given symbol.
+    /// # Description
+    /// Option Chain for a given symbol. [Read more](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/delete)
     ///
     /// # Arguments
     /// * `symbol` - Symbol for which data is to be fetched (Mandatory)
     /// * `strikecount` - Options strike count for symbol(MAX = 50)
     /// * `timestamp` - Options chain data at timestamp
-    ///
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Data-Api/paths/~1DataApi/delete)
     pub async fn get_option_chain(&self, symbol: &str, strikecount: Option<&str>, timestamp: Option<&str>) -> Result<OptionChainResponse, FyersError> {
         let mut url = format!("{}/options-chain-v3?symbol={}", DATA_API_BASE_URL, symbol);
         if let Some(sc) = strikecount {

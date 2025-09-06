@@ -3,9 +3,7 @@ use std::collections::HashMap;
 use serde::{Serialize, Deserialize};
 use serde_with::{ serde_as, DisplayFromStr };
 
-//////////////////////////////
-/// Historical candle data ///
-//////////////////////////////
+/// A single candle
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Candle(
     pub i64,
@@ -16,6 +14,7 @@ pub struct Candle(
     pub i64
 );
 
+/// Top level response for a history request
 #[derive(Debug, Deserialize, Serialize)]
 pub struct HistoryResponse {
     pub s: String,
@@ -27,7 +26,7 @@ pub struct HistoryResponse {
     pub message: Option<String>
 }
 
-// Convenience methods for Candle
+/// Convenience methods for Candle
 impl Candle {
     pub fn timestamp(&self) -> i64 {
         self.0
@@ -48,11 +47,8 @@ impl Candle {
         self.5
     }
 }
-//////////////////////////////
 
-////////////////////////////////
-/// Quote data for symbol(s) ///
-////////////////////////////////
+/// Quote data for symbol(s)
 #[serde_as]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct QuoteData {
@@ -83,6 +79,7 @@ pub struct QuoteData {
     pub message: Option<String>
 }
 
+/// Quote data for a single symbol
 #[derive(Debug, Deserialize, Serialize)]
 pub struct SymbolQuoteResponse {
     pub s: String,
@@ -90,6 +87,7 @@ pub struct SymbolQuoteResponse {
     pub v: QuoteData,
 }
 
+/// Top level response for a quote request
 #[derive(Debug, Deserialize, Serialize)]
 pub struct QuoteResponse {
     pub s: String,
@@ -100,11 +98,8 @@ pub struct QuoteResponse {
     #[serde(default)]
     pub message: Option<String>
 }
-////////////////////////////////
 
-////////////////////
-/// Market Depth ///
-////////////////////
+/// A single depth entry
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DepthEntry {
     pub price: f64,
@@ -112,6 +107,7 @@ pub struct DepthEntry {
     pub ord: i64,
 }
 
+/// Market Depth
 #[derive(Debug, Deserialize, Serialize)]
 pub struct MarketDepthData {
     pub totalbuyqty: i64,
@@ -142,6 +138,7 @@ pub struct MarketDepthData {
     pub oipercent: f64,
 }
 
+/// Top level response for a market depth request
 #[derive(Debug, Deserialize, Serialize)]
 pub struct MarketDepthResponse {
     pub s: String,
@@ -154,11 +151,6 @@ pub struct MarketDepthResponse {
     #[serde(default)]
     pub message: Option<String>
 }
-////////////////////
-
-/////////////////////
-/// Opition chain ///
-/////////////////////
 
 /// A single Call or Put option contract in the chain
 #[derive(Debug, Deserialize, Serialize)]
@@ -259,4 +251,3 @@ pub struct OptionChainResponse {
     #[serde(default)]
     pub message: Option<String>
 }
-/////////////////////

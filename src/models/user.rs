@@ -1,6 +1,6 @@
 use serde::{ Deserialize, Serialize };
 
-// Top level response for the /profile endpoint
+/// Top level response for the /profile endpoint
 #[derive(Debug, Deserialize)]
 pub struct ProfileResponse {
     pub s: String,
@@ -9,8 +9,7 @@ pub struct ProfileResponse {
     pub data: Profile,
 }
 
-// This represents the user profile data returned by the FYERS API
-// [API Docs](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post)
+/// This represents the user profile data returned by the FYERS API. [Read more](https://myapi.fyers.in/docsv3#tag/User/paths/~1User/post)
 #[derive(Debug, Deserialize)]
 pub struct Profile {
     pub name: String,
@@ -29,9 +28,9 @@ pub struct Profile {
     pub mtf_enabled: bool,
 }
 
-/////////////
-/// Funds ///
-/////////////
+///////////
+// Funds //
+///////////
 
 /// A single Fund entry
 #[derive(Debug, Deserialize, Serialize)]
@@ -51,11 +50,10 @@ pub struct FundsResponse {
     pub message: String,
     pub fund_limit: Vec<FundLimit>,
 }
-////////////////
 
-////////////////
-/// Holdings ///
-////////////////
+//////////////
+// Holdings //
+//////////////
 
 /// Holding entry
 #[derive(Debug, Deserialize, Serialize)]
@@ -79,7 +77,7 @@ pub struct Holding {
     pub collateral_quantity: i64,
 }
 
-// Overall holding
+/// Overall holding
 #[derive(Debug, Deserialize, Serialize)]
 pub struct OverallHolding {
     pub count_total: i64,
@@ -89,7 +87,7 @@ pub struct OverallHolding {
     pub pnl_perc: f64,
 }
 
-// Top level response for the /holdings endpoint
+/// Top level response for the /holdings endpoint
 #[derive(Debug, Deserialize, Serialize)]
 pub struct HoldingsResponse {
     pub s: String,

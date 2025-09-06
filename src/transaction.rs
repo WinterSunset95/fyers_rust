@@ -4,6 +4,7 @@ use reqwest::Client;
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
 
+/// The Transaction Class. Implements the [Transaction Info](https://myapi.fyers.in/docsv3#tag/Transaction-Info) section of the official Fyers API
 #[derive(Debug, Clone)]
 pub struct Transaction {
     http_client: Client,
@@ -12,6 +13,12 @@ pub struct Transaction {
 }
 
 impl Transaction {
+    /// # Description
+    /// Create a new instance of the Transaction class.
+    ///
+    /// # Arguments
+    /// * `app_id` - The app id of the user.
+    /// * `access_token` - The access token of the user.
     pub fn new(app_id: String, access_token: String) -> Self {
         Self {
             http_client: Client::new(),
@@ -21,13 +28,13 @@ impl Transaction {
     }
 
 
+    /// # Description
     /// Fetch all the orders placed by the user across all platforms and exchanges in the current
-    /// trading day.
+    /// trading day. [Read more](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
     ///
     /// # Arguments
     /// * `id` - Optional order ID to filter the results.
     /// * `order_tag` - Optional order tag to filter the results.
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
     pub async fn get_orders(&self, id: Option<&str>, order_tag: Option<&str>) -> Result<OrdersResponse, FyersError> {
         let mut url = format!("{}/orders", FYERS_API_BASE_URL);
         let mut query_params = vec![];
@@ -69,10 +76,9 @@ impl Transaction {
         }
     }
 
+    /// # Description
     /// Fetch the current open and closed positions for the current trading day. Not that the
-    /// previous day's closed positions will not be shown here.
-    ///
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
+    /// previous day's closed positions will not be shown here. [Read more](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
     pub async fn get_positions(&self) -> Result<PositionsResponse, FyersError> {
         let url = format!("{}/positions", FYERS_API_BASE_URL);
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
@@ -102,12 +108,12 @@ impl Transaction {
         }
     }
 
+    /// # Description
     /// Fetch all the trades for the current day across all platforms and exchanges in the current
-    /// trading day.
+    /// trading day. [Read more](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
     ///
     /// # Arguments
     /// * `order_tag` - Optional order tag to filter the results.
-    /// [API Docs](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
     pub async fn get_trades(&self, order_tag: Option<&str>) -> Result<TradesResponse, FyersError> {
         let mut url = format!("{}/tradebook", FYERS_API_BASE_URL);
         let mut query_params = vec![];
