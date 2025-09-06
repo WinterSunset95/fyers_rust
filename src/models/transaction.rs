@@ -113,3 +113,46 @@ pub struct PositionsResponse {
     pub overall: Overall,
 }
 /////////////////
+
+//////////////
+/// Trades ///
+//////////////
+
+/// A single trade item for the tradeBook array
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Trade {
+    pub symbol: String,
+    pub row: i64,
+    pub order_date_time: String,
+    pub order_number: String,
+    pub trade_number: String,
+    pub trade_price: f64,
+    pub trade_value: f64,
+    pub traded_qty: i64,
+    pub side: i64,
+
+    //    1 => Buy
+    //    -1 => Sell
+    //    View Details
+
+    pub product_type: String,
+    pub exchange_order_no: String,
+    pub segment: i64,
+    pub exchange: i64,
+    pub fy_token: String,
+    pub order_tag: String,
+    //Note: 1: will be concatenated at the start of tag provided by user.
+    //2: will be concatenated at the start of tag generated internally by Fyers.
+    //Default value if tag not provided when order is placed is 1:Untagged
+}
+
+/// The top level response for the /tradebook endpoint
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TradesResponse {
+    pub s: String,
+    pub code: i64,
+    pub message: String,
+    pub trade_book: Vec<Trade>,
+}
