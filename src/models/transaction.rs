@@ -94,7 +94,7 @@ pub struct NetPosition {
 /// Overall positions
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
-pub struct Positions {
+pub struct Overall {
     pub count_total: i64,
     pub count_open: i64,
     pub pl_total: f64,
@@ -110,6 +110,6 @@ pub struct PositionsResponse {
     pub code: i64,
     pub message: String,
     pub net_positions: Vec<NetPosition>,
-    pub positions: Positions,
+    pub overall: Overall,
 }
 /////////////////
