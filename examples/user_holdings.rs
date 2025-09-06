@@ -2,7 +2,7 @@ mod helpers;
 use fyers_rust::user::User;
 use fyers_rust::error::FyersError;
 use serde_json::to_string_pretty;
-use std::{env, fs};
+use std::fs;
 
 #[tokio::main]
 async fn main() -> Result<(), FyersError> {

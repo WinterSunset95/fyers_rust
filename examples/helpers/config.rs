@@ -1,4 +1,4 @@
-use std::{env, fs};
+use std::{env};
 
 pub struct Config {
     pub app_id: String,

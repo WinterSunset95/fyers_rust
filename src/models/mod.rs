@@ -3,6 +3,7 @@
 
 pub mod user;
 pub mod dataapi;
+pub mod transaction;
 
 pub use user::Profile;
 pub use user::ProfileResponse;
@@ -15,3 +16,5 @@ pub use dataapi::MarketDepthResponse;
 pub use dataapi::OptionChainResponse;
 pub use dataapi::Candle;
 
+
+pub use transaction::OrdersResponse;
