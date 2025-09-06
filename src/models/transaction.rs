@@ -52,3 +52,64 @@ pub struct OrdersResponse {
     pub order_book: Vec<Order>,
 }
 //////////////
+
+
+/////////////////
+/// Positions ///
+/////////////////
+
+/// A Net position entry for the netPositions array
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NetPosition {
+    pub symbol: String,
+    pub id: String,
+    pub buy_avg: f64,
+    pub buy_qty: i64,
+    pub sell_avg: f64,
+    pub sell_qty: i64,
+    pub net_avg: f64,
+    pub net_qty: i64,
+    pub side: i64,
+    pub qty: i64,
+    pub product_type: String,
+    #[serde(rename = "realized_profit")]
+    pub realized_profit: f64,
+    pub pl: f64,
+    pub cross_currency: String,
+    pub rbi_ref_rate: f64,
+    #[serde(rename = "qtyMulti_com")]
+    pub qty_multi_com: f64,
+    pub segment: i64,
+    pub exchange: i64,
+    pub sl_no: i64,
+    pub ltp: f64,
+    pub fy_token: String,
+    pub cf_buy_qty: i64,
+    pub cf_sell_qty: i64,
+    pub day_buy_qty: i64,
+    pub day_sell_qty: i64,
+}
+
+/// Overall positions
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub struct Positions {
+    pub count_total: i64,
+    pub count_open: i64,
+    pub pl_total: f64,
+    pub pl_realized: f64,
+    pub pl_unrealized: f64,
+}
+
+/// The top level response for the /positions endpoint
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PositionsResponse {
+    pub s: String,
+    pub code: i64,
+    pub message: String,
+    pub net_positions: Vec<NetPosition>,
+    pub positions: Positions,
+}
+/////////////////
