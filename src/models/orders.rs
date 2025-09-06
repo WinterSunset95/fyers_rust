@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 /// Request structure for a single order
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
-pub struct OrderRequest {
+pub struct SingleOrderRequest {
     pub symbol: String,
     pub qty: i64,
     #[serde(rename = "type")]
@@ -28,21 +28,40 @@ pub struct OrderRequest {
         //BO => Bracket Order
         //MTF => Approved Symbols Only
 
-    pub limit_price: Option<f64>,
-    pub stop_price: Option<f64>,
-    pub disclosed_qty: Option<i64>,
     pub validity: String,
     pub offline_order: bool,
-    pub stop_loss: Option<f64>,
-    pub take_profit: Option<f64>,
+
+    pub limit_price: f64,
+    pub stop_price: f64,
+    pub disclosed_qty: i64,
+    pub stop_loss: f64,
+    pub take_profit: f64,
     pub order_tag: Option<String>,
 }
 
 /// Response structure for a single order
 #[derive(Debug, Deserialize, Serialize)]
-pub struct OrderResponse {
+pub struct SingleOrderResponse {
     pub s: String,
     pub code: i64,
     pub message: String,
     pub id: String,
+}
+
+/// A single 'data' field for the MultipleOrdersResponse
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Data {
+    pub status_code: i64,
+    pub body: SingleOrderResponse,
+    pub status_description: String,
+}
+
+/// Response structure for multiple orders
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MultipleOrdersResponse {
+    pub s: String,
+    pub code: i64,
+    pub data: Vec<Data>,
+    pub message: String,
 }

@@ -18,7 +18,10 @@ pub use dataapi::MarketDepthResponse;
 pub use dataapi::OptionChainResponse;
 pub use dataapi::Candle;
 
-
 pub use transaction::OrdersResponse;
 pub use transaction::PositionsResponse;
 pub use transaction::TradesResponse;
+
+pub use orders::SingleOrderRequest;
+pub use orders::SingleOrderResponse;
+pub use orders::MultipleOrdersResponse;
