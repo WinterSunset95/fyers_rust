@@ -11,17 +11,6 @@ categories = ["api-bindings", "finance"]
 name = "fyers_rust"
 path = "src/lib.rs"
 
-[[example]]
-name = "get_profile"
-path = "examples/get_profile.rs"
-[[example]]
-name = "auth_and_profile"
-path = "examples/auth_and_profile.rs"
-[[example]]
-name = "data_history"
-path = "examples/data_history.rs"
-
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
