@@ -19,3 +19,4 @@ pub use dataapi::Candle;
 
 pub use transaction::OrdersResponse;
 pub use transaction::PositionsResponse;
+pub use transaction::TradesResponse;

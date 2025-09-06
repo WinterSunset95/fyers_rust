@@ -1,5 +1,5 @@
 use crate::error::FyersError;
-use crate::models::{OrdersResponse, PositionsResponse};
+use crate::models::{OrdersResponse, PositionsResponse, TradesResponse};
 use reqwest::Client;
 
 const FYERS_API_BASE_URL: &str = "https://api-t1.fyers.in/api/v3";
@@ -108,7 +108,7 @@ impl Transaction {
     /// # Arguments
     /// * `order_tag` - Optional order tag to filter the results.
     /// [API Docs](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
-    pub async fn get_trades(&self, order_tag: Option<&str>) -> Result<PositionsResponse, FyersError> {
+    pub async fn get_trades(&self, order_tag: Option<&str>) -> Result<TradesResponse, FyersError> {
         let mut url = format!("{}/tradebook", FYERS_API_BASE_URL);
         let mut query_params = vec![];
         if let Some(order_tag) = order_tag {
@@ -130,7 +130,7 @@ impl Transaction {
         }
         let response_text = response.text().await?;
         println!("Raw response from /tradebook:\n---\n{}\n---", response_text);
-        let positions_response: PositionsResponse = serde_json::from_str(&response_text)?;
+        let positions_response: TradesResponse = serde_json::from_str(&response_text)?;
         if positions_response.s == "ok" {
             Ok(positions_response)
         } else {
