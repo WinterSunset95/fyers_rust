@@ -31,5 +31,4 @@ async fn main() -> Result<(), FyersError> {
     } else {
         Err(FyersError::Unknown("Error fetching user funds".to_string()))
     }
-
 }

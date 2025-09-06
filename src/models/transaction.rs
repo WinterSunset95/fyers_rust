@@ -1,7 +1,4 @@
-use std::collections::HashMap;
-
 use serde::{Serialize, Deserialize};
-use serde_with::{ serde_as, DisplayFromStr };
 
 //////////////
 /// Orders ///
@@ -47,10 +44,11 @@ pub struct Order {
 
 /// Top level response for the /orders endpoint
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OrdersResponse {
     pub s: String,
     pub code: i64,
     pub message: String,
-    pub orders: Vec<Order>,
+    pub order_book: Vec<Order>,
 }
 //////////////
