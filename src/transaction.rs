@@ -23,9 +23,24 @@ impl Transaction {
 
     /// Fetch all the orders placed by the user across all platforms and exchanges in the current
     /// trading day.
+    ///
+    /// # Arguments
+    /// * `id` - Optional order ID to filter the results.
+    /// * `order_tag` - Optional order tag to filter the results.
     /// [API Docs](https://myapi.fyers.in/docsv3#tag/Transaction-Info)
-    pub async fn get_orders(&self) -> Result<OrdersResponse, FyersError> {
-        let url = format!("{}/orders", FYERS_API_BASE_URL);
+    pub async fn get_orders(&self, id: Option<&str>, order_tag: Option<&str>) -> Result<OrdersResponse, FyersError> {
+        let mut url = format!("{}/orders", FYERS_API_BASE_URL);
+        let mut query_params = vec![];
+        if let Some(id) = id {
+            query_params.push(format!("id={}", id));
+        }
+        if let Some(order_tag) = order_tag {
+            query_params.push(format!("order_tag={}", order_tag));
+        }
+        if !query_params.is_empty() {
+            url = format!("{}?{}", url, query_params.join("&"));
+        }
+
         let auth_header_value = format!("{}:{}", self.app_id, self.access_token);
 
         let response = self

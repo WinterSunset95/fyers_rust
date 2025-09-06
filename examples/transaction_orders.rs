@@ -12,7 +12,7 @@ async fn main() -> Result<(), FyersError> {
 
     let transaction = Transaction::new(app_id, access_token);
 
-    let orders = transaction.get_orders().await?;
+    let orders = transaction.get_orders(None, None).await?;
 
     let filename = format!("transaction_orders.json");
     let json_data = to_string_pretty(&orders)?;
