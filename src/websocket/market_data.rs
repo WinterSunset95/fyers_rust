@@ -23,6 +23,8 @@ pub struct MarketDataSocket {
 }
 
 impl MarketDataSocket {
+    // TODO: Add a autoreconnect(i64) method to determine how many times the socket will try to
+    // reconnect before giving up and comitting sepukku.
     /// # Description
     /// Connect to a given Websocket URL with the provided authentication
     ///
@@ -45,9 +47,15 @@ impl MarketDataSocket {
         }
 
         let auth_token = format!("{}:{}", self.app_id, self.access_token);
+        let url = url::Url::parse(MARKET_DATA_URL).expect("Failed to parse market data url");
+        let host = url
+            .host_str()
+            .expect("URL has no host")
+            .to_string();
 
         let request = Request::builder()
             .uri(MARKET_DATA_URL)
+            .header("Host", host)
             .header("Authorization", auth_token)
             .header("Sec-WebSocket-Version", "13")
             .header("Sec-WebSocket-Key", tungstenite::handshake::client::generate_key())

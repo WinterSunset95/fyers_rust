@@ -18,7 +18,7 @@ async fn main() -> Result<(), FyersError> {
             println!("\nSuccess");
         }
         Err(e) => {
-            eprintln!("\nFailure");
+            eprintln!("\nFailure: {}", e);
         }
     }
 
