@@ -5,7 +5,7 @@ pub mod user;
 pub mod dataapi;
 pub mod transaction;
 pub mod orders;
-pub mod websocket;
+pub mod market_data;
 
 pub use user::Profile;
 pub use user::ProfileResponse;

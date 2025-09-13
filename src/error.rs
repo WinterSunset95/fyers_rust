@@ -21,6 +21,8 @@ pub enum FyersError {
     // Websocket errors
     #[error("Websocket error: {0}")]
     WebsocketError(#[from] tokio_tungstenite::tungstenite::Error),
+    #[error("Websocket error: {0}")]
+    WebSocket(String),
 
     // Unknown errors
     #[error("Unknown error: {0}")]

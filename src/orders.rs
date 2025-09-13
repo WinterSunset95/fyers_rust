@@ -74,5 +74,4 @@ impl Order {
     pub async fn multiple_orders(&self, orders: &Vec<SingleOrderRequest>) -> Result<MultipleOrdersResponse, FyersError> {
         unimplemented!()
     }
-
 }

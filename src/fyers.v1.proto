@@ -1,0 +1,77 @@
+// Protobuf schema for FYERS Market Data websocket
+// Reverse-engineered from the official Node.js SDK
+
+syntax = "proto3";
+
+package fyers.v1;
+
+option java_package = "com.fyers.v1";
+
+import "google/protobuf/wrappers.proto";
+
+// This corresponds to the `MarketLevel` message
+message MarketLevel {
+    google.protobuf.Int64Value price = 1;
+    google.protobuf.UInt32Value qty = 2;
+    google.protobuf.UInt32Value nord = 3; // Number of orders
+    google.protobuf.UInt32Value num = 4;
+}
+
+// Corresponds to the `Depth` message
+message Depth {
+    google.protobuf.UInt64Value tbq = 1; // Total Buy Quantity
+    google.protobuf.UInt64Value tsq = 2; // Total Sell Quantity
+    repeated MarketLevel asks = 3;
+    repeated MarketLevel bids = 4;
+}
+
+// Corresponds to the `Quote` message
+message Quote {
+    google.protobuf.Int64Value ltp = 1;
+    google.protobuf.UInt32Value ltt = 2;
+    google.protobuf.UInt32Value ltq = 3;
+    google.protobuf.UInt64Value vtt = 4;
+    google.protobuf.UInt64Value vtt_diff = 5;
+    google.protobuf.UInt64Value oi = 6;
+    google.protobuf.Int64Value ltpc = 7;
+}
+
+// ... other messages like ExtendedQuote, DailyQuote, OHLCV can be added here
+// following the same pattern from `msg.js`.
+
+// This is the top-level message that the server sends.
+// It contains a map where the key is the symbol ticker.
+message SocketMessage {
+    MessageType type = 1;
+    map<string, MarketFeed> feeds = 2;
+    bool snapshot = 3;
+    string msg = 4;
+    bool error = 5;
+}
+
+message MarketFeed {
+    Quote quote = 1;
+    // ExtendedQuote eq = 2; // Add other quote types as needed
+    // DailyQuote dq = 3;
+    // OHLCV ohlcv = 4;
+    Depth depth = 5;
+    google.protobuf.UInt64Value feed_time = 6;
+    google.protobuf.UInt64Value send_time = 7;
+    string token = 8;
+    uint64 sequence_no = 9;
+    bool snapshot = 10;
+    string ticker = 11;
+}
+
+enum MessageType {
+    PING = 0;
+    QUOTE = 1;
+    EXTENDED_QUOTE = 2;
+    DAILY_QUOTE = 3;
+    MARKET_LEVEL = 4;
+    OHLCV = 5;
+    DEPTH = 6;
+    ALL = 7;
+    RESPONSE = 8;
+}
+
